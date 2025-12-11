@@ -68,6 +68,12 @@ File: _.eslintrc_
 }
 ```
 
+## Versioning
+
+| Plugin version | Angular version | Angular ESLint version |
+| :------------: | :-------------: | :--------------------: |
+|    ^20.0.0     |    ^20.3.15     |        ^20.7.0         |
+
 ## Roadtrip
 
 - [x] Detect deprecated Components
