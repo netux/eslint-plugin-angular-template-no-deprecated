@@ -4,7 +4,7 @@ An ESLint plugin that highlights usages of deprecated Components or Component pr
 
 Requires [angular-eslint](https://www.npmjs.com/package/angular-eslint).
 
-> ![NOTE]
+> [!NOTE]
 > This plugin does no dependency injection resolution. It simply scans the whole TypeScript project in search of component definitions that have the `@deprecated` JSDoc.
 >
 > Because of this, you may see false-positives or false-negatives for cases when a component is not actually importer, or is imported with a different prefix selector.
