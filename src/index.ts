@@ -1,3 +1,4 @@
+import angularTemplateParser from '@angular-eslint/template-parser';
 import {
 	RULE_NAME as NO_DEPRECATED_RULE_NAME,
 	rule as noDeprecatedRule
@@ -23,6 +24,9 @@ const plugin: TSESLint.FlatConfig.Plugin = {
 
 export const configs: TSESLint.FlatConfig.SharedConfigs = {
 	recommended: {
+		languageOptions: {
+			parser: angularTemplateParser
+		},
 		plugins: {
 			[pluginNamespace]: plugin
 		},
