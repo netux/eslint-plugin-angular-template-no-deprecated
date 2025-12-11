@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "ES2024",
+		"strict": true,
+		"module": "nodenext",
+		"esModuleInterop": true,
+		"resolveJsonModule": true,
+		"sourceMap": true,
+		"declaration": true,
+		"skipLibCheck": true,
+		"rootDir": "src/",
+		"outDir": "./dist"
+	},
+	"include": [
+		"package.json",
+		"src/**/*"
+	],
+	"exclude": [
+		"tests/project/**/*"
+	]
+}

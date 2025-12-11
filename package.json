@@ -1,0 +1,46 @@
+{
+  "name": "eslint-plugin-angular-template-no-deprecated",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "angular",
+    "angular-template",
+    "deprecation",
+    "deprecated"
+  ],
+  "license": "MIT",
+  "author": "Martín \"netux\" Rodriguez",
+  "type": "commonjs",
+  "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rimraf ./dist && tsc --project .",
+    "watch": "npm run build -- --watch",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.2",
+    "rimraf": "^6.1.2",
+    "tsx": "^4.21.0",
+    "vitest": "^4.0.15"
+  },
+  "peerDependencies": {
+    "@angular-eslint/template-parser": "^20.7.0",
+    "@angular-eslint/test-utils": "^20.7.0",
+    "@angular-eslint/utils": "^20.7.0",
+    "@typescript-eslint/utils": "^8.49.0",
+    "eslint": ">=9.0.0",
+    "typescript": "~5.9.1"
+  },
+  "dependencies": {
+    "@angular/compiler": "^21.0.4"
+  }
+}

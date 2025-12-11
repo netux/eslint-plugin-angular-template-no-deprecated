@@ -1,0 +1,40 @@
+@if (deprecatedInput !== defaultSymbol) {
+<span>Deprecated input 'deprecatedInput' used!</span>
+<br />
+}
+
+@if (deprecatedInput2 !== defaultSymbol) {
+<span>Deprecated input 'deprecatedInput2' used!</span>
+<br />
+}
+
+@if (deprecatedEventEmitter.observed) {
+<span>Deprecated output 'deprecatedEventEmitter' observed!</span>
+<br />
+}
+
+@if (deprecatedInputSignal() !== defaultSymbol) {
+<span>Deprecated signal 'deprecatedInputSignal' used!</span>
+<br />
+}
+
+@if (deprecatedInputSignal2() !== defaultSymbol) {
+<span>Deprecated signal 'deprecatedInputSignal2' used!</span>
+<br />
+}
+
+<!-- TODO(netux): OutputRefs don't have a way to know if they're observed or not :( -->
+<!-- @if (deprecatedOutput.observed) {
+<span>Deprecated output 'deprecatedOutput' observed!</span>
+<br />
+} -->
+
+@if (deprecatedInputForTwoWayBinding !== defaultSymbol) {
+<span>
+  Deprecated input 'deprecatedInputForTwoWayBinding' used
+  @if (deprecatedInputForTwoWayBindingChange.observed) {
+  and its related deprecated output 'deprecatedInputForTwoWayBindingChange' is also observed
+  } !
+</span>
+<br />
+}
