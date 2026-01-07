@@ -1,8 +1,9 @@
 import ts from 'typescript';
 
 export enum AngularEntityType {
-	Component = 'component'
-	// TODO(netux): support other types: Directive, Pipe
+	Component = 'component',
+	Directive = 'directive'
+	// TODO(netux): support other types: Pipe
 }
 
 export interface AngularEntityExposedProperty {
@@ -19,7 +20,11 @@ export function getAngularEntity(classDeclaration: ts.ClassDeclaration):
 	| undefined {
 	const angularDecorator = findAngularDecorator(classDeclaration);
 	if (angularDecorator != null) {
-		if (angularDecorator.type === AngularEntityType.Component) {
+		if (
+			[AngularEntityType.Component, AngularEntityType.Directive].includes(
+				angularDecorator.type
+			)
+		) {
 			const componentDecoratorArgument = (
 				angularDecorator.decoratorAst.expression as ts.CallExpression
 			).arguments[0];
@@ -60,7 +65,7 @@ export function getAngularEntity(classDeclaration: ts.ClassDeclaration):
 				selectorProperty.initializer as ts.StringLiteral;
 
 			return {
-				type: AngularEntityType.Component,
+				type: angularDecorator.type,
 				selectors: splitAngularSelectors(selectorPropertyValue.text),
 				exposedProperties: getAngularElementExposedProperties(classDeclaration)
 			};
@@ -80,11 +85,12 @@ export function getAngularEntity(classDeclaration: ts.ClassDeclaration):
 		const propertyType = compiledAngularProperty.propertyAst
 			.type as ts.TypeReferenceNode;
 
-		if (compiledAngularProperty.type === AngularEntityType.Component) {
-			if (propertyType.typeName.getText() !== 'i0.ɵɵComponentDeclaration') {
-				return;
-			}
-
+		if (
+			(compiledAngularProperty.type === AngularEntityType.Component &&
+				propertyType.typeName.getText() === 'i0.ɵɵComponentDeclaration') ||
+			(compiledAngularProperty.type === AngularEntityType.Directive &&
+				propertyType.typeName.getText() === 'i0.ɵɵDirectiveDeclaration')
+		) {
 			const selectorTypeArgument = propertyType.typeArguments?.[1];
 			if (
 				selectorTypeArgument == null ||
@@ -101,7 +107,7 @@ export function getAngularEntity(classDeclaration: ts.ClassDeclaration):
 			}
 
 			return {
-				type: AngularEntityType.Component,
+				type: compiledAngularProperty.type,
 				selectors: splitAngularSelectors(selectorTypeArgumentLiteral.text),
 				exposedProperties: getAngularElementExposedProperties(classDeclaration)
 			};
@@ -132,19 +138,18 @@ function findAngularDecorator(classDeclaration: ts.ClassDeclaration):
 		const calledDecoratorName = (
 			decorator.expression as ts.CallExpression
 		).expression.getText();
-		let angularDecoratorType: AngularEntityType;
 
-		switch (calledDecoratorName) {
-			case 'Component': {
-				angularDecoratorType = AngularEntityType.Component;
-				break;
-			}
-			default: {
-				continue;
-			}
+		const angularDecoratorType = {
+			Component: AngularEntityType.Component,
+			Directive: AngularEntityType.Directive
+		}[calledDecoratorName];
+
+		if (angularDecoratorType == null) {
+			continue;
 		}
 
-		// TODO(netux): make sure this is Angular's Component declaration, instead of just relying on the name
+		// TODO(netux): check imports to make sure this is Angular's decorator.
+		// Don't just base this on the decorator name.
 
 		return {
 			type: angularDecoratorType,
@@ -168,6 +173,12 @@ function findCompiledAngularProperty(classDeclaration: ts.ClassDeclaration):
 			case 'ɵcmp': {
 				return {
 					type: AngularEntityType.Component,
+					propertyAst: member as ts.PropertyDeclaration
+				};
+			}
+			case 'ɵdir': {
+				return {
+					type: AngularEntityType.Directive,
 					propertyAst: member as ts.PropertyDeclaration
 				};
 			}

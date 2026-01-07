@@ -6,6 +6,7 @@ import type {
 } from '@typescript-eslint/rule-tester';
 import {
 	MESSAGE_DEPRECATED_COMPONENT,
+	MESSAGE_DEPRECATED_DIRECTIVE,
 	MESSAGE_DEPRECATED_PROPERTY,
 	type MessageIds,
 	type Options
@@ -130,7 +131,69 @@ export const invalid: readonly InvalidTestCase<MessageIds, Options>[] = [
 				}
 			]
 		})
-	)
+	),
+	{
+		name: 'Finds usage of a deprecated directive declared in the same Angular application',
+		...fromFSTemplateCase('uses-deprecated-directive-from-self'),
+		errors: [
+			{
+				messageId: MESSAGE_DEPRECATED_DIRECTIVE,
+				data: {
+					directiveName: 'IsDeprecatedDirective'
+				}
+			}
+		]
+	},
+	{
+		name: 'Finds usage of a deprecated directives declared in an external library',
+		...fromFSTemplateCase('uses-deprecated-directive-from-lib'),
+		errors: [
+			{
+				messageId: MESSAGE_DEPRECATED_DIRECTIVE,
+				data: {
+					directiveName: 'LibIsDeprecatedDirective'
+				}
+			}
+		]
+	},
+	{
+		name: 'Finds usage of a deprecated directive inside an inline template, declared in the same Angular application',
+		...fromFSTemplateCase('uses-deprecated-directive-in-inline-template', {
+			ext: '.ts'
+		}),
+		errors: [
+			{
+				messageId: MESSAGE_DEPRECATED_DIRECTIVE,
+				data: {
+					directiveName: 'IsDeprecatedDirective'
+				}
+			}
+		]
+	},
+	{
+		name: 'Finds deprecated input usages in directive declared in the same Angular application',
+		...fromFSTemplateCase('uses-deprecated-inputs-from-self-directive'),
+		errors: [
+			{
+				messageId: MESSAGE_DEPRECATED_PROPERTY,
+				data: {
+					propertyName: 'HasDeprecatedInputsDirective.deprecatedInput'
+				}
+			}
+		]
+	},
+	{
+		name: 'Finds deprecated input usages in directive declared in an external library',
+		...fromFSTemplateCase('uses-deprecated-inputs-from-lib-directive'),
+		errors: [
+			{
+				messageId: MESSAGE_DEPRECATED_PROPERTY,
+				data: {
+					propertyName: 'LibHasDeprecatedInputsDirective.deprecatedInput'
+				}
+			}
+		]
+	}
 ];
 
 function fromFSTemplate(

@@ -12,6 +12,7 @@ interface Mapping {
 	tsConfigFilePath: string;
 	sourceFilePaths: string[];
 	components: Map<string, AngularElementMapping>;
+	directives: Map<string, AngularElementMapping>;
 }
 
 interface AngularElementMapping {
@@ -64,6 +65,7 @@ function getOrLoadMappings(
 	tsProjectService.closeClientFile(initiatorTsFileAbsolutePath);
 
 	const componentsMap: Mapping['components'] = new Map();
+	const directivesMap: Mapping['directives'] = new Map();
 
 	for (const sourceFile of program.getSourceFiles()) {
 		for (const statement of sourceFile.statements) {
@@ -102,6 +104,24 @@ function getOrLoadMappings(
 					}
 					break;
 				}
+				case AngularEntityType.Directive: {
+					const directive = {
+						filePath: sourceFile.fileName,
+						className: statementClass.name.getText(),
+						isDeprecated: hasDeprecatedAnnotation(statementClass),
+						properties: Object.fromEntries(
+							angularEntity.exposedProperties.map((property) => [
+								property.name,
+								{ isDeprecated: hasDeprecatedAnnotation(property.propertyAst) }
+							])
+						)
+					};
+
+					for (const selector of angularEntity.selectors) {
+						directivesMap.set(selector, directive);
+					}
+					break;
+				}
 			}
 		}
 	}
@@ -111,7 +131,8 @@ function getOrLoadMappings(
 		sourceFilePaths: program
 			.getSourceFiles()
 			.map((sourceFile) => sourceFile.fileName),
-		components: componentsMap
+		components: componentsMap,
+		directives: directivesMap
 	};
 
 	// TODO(netux): replace old mappings that have a matching tsconfig
@@ -129,9 +150,18 @@ export const getMappings = () => Object.freeze([...mappings]);
 
 export function findAngularComponentInAllMappings(selector: string) {
 	for (const mapping of getMappings()) {
-		// TODO(netux): support attribute selectors (`[my-component]` or `element [my-component]`)
-
 		const component = mapping.components.get(selector);
+		if (component == null) {
+			continue;
+		}
+
+		return component;
+	}
+}
+
+export function findAngularDirectivesAllMappings(selector: string) {
+	for (const mapping of getMappings()) {
+		const component = mapping.directives.get(selector);
 		if (component == null) {
 			continue;
 		}
