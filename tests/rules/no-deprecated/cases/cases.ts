@@ -171,6 +171,26 @@ export const invalid: readonly InvalidTestCase<MessageIds, Options>[] = [
 		]
 	},
 	{
+		name: 'Finds usage of a deprecated directive declared in @angular/commons',
+		...fromFSTemplateCase('uses-deprecated-directive-from-angular-commons'),
+		errors: [
+			// <ng-template [ngIf]> longform
+			{
+				messageId: MESSAGE_DEPRECATED_DIRECTIVE,
+				data: {
+					directiveName: 'NgIf'
+				}
+			},
+			// *ngIf shorthand
+			{
+				messageId: MESSAGE_DEPRECATED_DIRECTIVE,
+				data: {
+					directiveName: 'NgIf'
+				}
+			}
+		]
+	},
+	{
 		name: 'Finds deprecated input usages in directive declared in the same Angular application',
 		...fromFSTemplateCase('uses-deprecated-inputs-from-self-directive'),
 		errors: [

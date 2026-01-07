@@ -5,11 +5,12 @@ import { CaseUsesDeprecatedComponentFromLibComponent } from '../cases/uses-depre
 import { CaseUsesDeprecatedComponentInInlineTemplateComponent } from '../cases/uses-deprecated-component-in-inline-template/uses-deprecated-component-in-inline-template.component';
 import { CaseUsesDeprecatedInputsFromSelfComponentComponent } from '../cases/uses-deprecated-inputs-from-self-component/uses-deprecated-inputs-from-self-component.component';
 import { CaseUsesDeprecatedInputsFromLibComponentComponent } from '../cases/uses-deprecated-inputs-from-lib-component/uses-deprecated-inputs-from-lib-component.component';
-import { CaseUsesDeprecatedDirectiveFromLibComponent } from '../cases/uses-deprecated-directive-from-lib/uses-deprecated-directive-from-lib.component';
 import { CaseUsesDeprecatedDirectiveFromSelfComponent } from '../cases/uses-deprecated-directive-from-self/uses-deprecated-directive-from-self.component';
-import { CaseUsesDeprecatedInputsFromLibDirectiveComponent } from '../cases/uses-deprecated-inputs-from-lib-directive/uses-deprecated-inputs-from-lib-directive.component';
-import { CaseUsesDeprecatedInputsFromSelfDirectiveComponent } from '../cases/uses-deprecated-inputs-from-self-directive/uses-deprecated-inputs-from-self-directive.component';
+import { CaseUsesDeprecatedDirectiveFromLibComponent } from '../cases/uses-deprecated-directive-from-lib/uses-deprecated-directive-from-lib.component';
 import { CaseUsesDeprecatedDirectiveInInlineTemplateComponent } from '../cases/uses-deprecated-directive-in-inline-template/uses-deprecated-directive-in-inline-template.component';
+import { CaseUsesDeprecatedDirectiveFromAngularCommonsComponent } from '../cases/uses-deprecated-directive-from-angular-commons/uses-deprecated-directive-from-angular-commons.component';
+import { CaseUsesDeprecatedInputsFromSelfDirectiveComponent } from '../cases/uses-deprecated-inputs-from-self-directive/uses-deprecated-inputs-from-self-directive.component';
+import { CaseUsesDeprecatedInputsFromLibDirectiveComponent } from '../cases/uses-deprecated-inputs-from-lib-directive/uses-deprecated-inputs-from-lib-directive.component';
 
 @Component({
   selector: 'app-root',
@@ -23,6 +24,7 @@ import { CaseUsesDeprecatedDirectiveInInlineTemplateComponent } from '../cases/u
     CaseUsesDeprecatedDirectiveInInlineTemplateComponent,
     CaseUsesDeprecatedDirectiveFromSelfComponent,
     CaseUsesDeprecatedDirectiveFromLibComponent,
+    CaseUsesDeprecatedDirectiveFromAngularCommonsComponent,
     CaseUsesDeprecatedInputsFromSelfDirectiveComponent,
     CaseUsesDeprecatedInputsFromLibDirectiveComponent,
   ],
