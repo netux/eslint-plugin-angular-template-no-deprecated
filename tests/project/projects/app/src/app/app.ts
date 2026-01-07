@@ -31,6 +31,4 @@ import { CaseUsesDeprecatedInputsFromLibDirectiveComponent } from '../cases/uses
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('project');
-}
+export class App {}
