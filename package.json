@@ -11,6 +11,7 @@
     "deprecation",
     "deprecated"
   ],
+  "repository": "github:netux/eslint-plugin-angular-template-no-deprecated",
   "license": "MIT",
   "author": "Martín \"netux\" Rodriguez",
   "type": "commonjs",
