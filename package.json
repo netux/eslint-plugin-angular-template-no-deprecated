@@ -24,11 +24,15 @@
   "scripts": {
     "build": "rimraf ./dist && tsc --project .",
     "watch": "npm run build -- --watch",
-    "test": "vitest"
+    "test": "vitest",
+    "release:major": "changelog --major && git add CHANGELOG.md && git commit -m 'docs(CHANGELOG): updated with latest changes' && npm version major -m 'chore(npm): increase major pacakge version to %s'",
+    "release:minor": "changelog --minor && git add CHANGELOG.md && git commit -m 'docs(CHANGELOG): updated with latest changes' && npm version minor -m 'chore(npm): increase minor pacakge version to %s'",
+    "release:patch": "changelog --patch && git add CHANGELOG.md && git commit -m 'docs(CHANGELOG): updated with latest changes' && npm version patch -m 'chore(npm): increase patch pacakge version to %s'"
   },
   "devDependencies": {
     "@angular/compiler": "^20.3.15",
     "@types/node": "^24.10.2",
+    "generate-changelog": "^1.8.0",
     "rimraf": "^6.1.2",
     "tsx": "^4.21.0",
     "vitest": "^4.0.15"
