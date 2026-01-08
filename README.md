@@ -78,8 +78,8 @@ File: _.eslintrc_
 
 - [x] Detect deprecated Components
   - [x] Detect deprecated Component properties
-- [ ] Detect deprecated Directives
-  - [ ] Detect deprecated Directive properties
-- [ ] Detect deprecates Pipes
+- [x] Detect deprecated Directives
+  - [x] Detect deprecated Directive properties
+- [x] Detect deprecates Pipes
   - [ ] Detect deprecated Pipe properties
 - [ ] Some sort of dependency injection resolution to avoid false-positives/false-negatives
