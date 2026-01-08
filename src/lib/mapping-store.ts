@@ -159,13 +159,13 @@ export function findAngularComponentInAllMappings(selector: string) {
 	}
 }
 
-export function findAngularDirectivesAllMappings(selector: string) {
+export function findAngularDirectiveAllMappings(selector: string) {
 	for (const mapping of getMappings()) {
-		const component = mapping.directives.get(selector);
-		if (component == null) {
+		const directive = mapping.directives.get(selector);
+		if (directive == null) {
 			continue;
 		}
 
-		return component;
+		return directive;
 	}
 }

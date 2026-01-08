@@ -2,7 +2,7 @@ import { getTemplateParserServices } from '@angular-eslint/utils';
 import { ESLintUtils } from '@typescript-eslint/utils';
 import {
 	findAngularComponentInAllMappings,
-	findAngularDirectivesAllMappings,
+	findAngularDirectiveAllMappings,
 	tryEnsureMappings
 } from '../lib/mapping-store';
 import { findComponentTsFileFromTemplateFile } from '../lib/find-files';
@@ -88,10 +88,10 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs<Options, MessageIds>({
 						elementNode.type === 'Element' ? elementNode.name : 'ng-template';
 
 					const elementMapping =
-						findAngularDirectivesAllMappings(
+						findAngularDirectiveAllMappings(
 							// Prioritize element-specific attributes
 							`${elementName} [${attributeNode.name}]`
-						) || findAngularDirectivesAllMappings(`[${attributeNode.name}]`);
+						) || findAngularDirectiveAllMappings(`[${attributeNode.name}]`);
 
 					return {
 						elementMapping,
