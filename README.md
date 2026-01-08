@@ -74,7 +74,7 @@ File: _.eslintrc_
 | :------------: | :-------------: | :--------------------: |
 |    ^20.0.0     |    ^20.3.15     |        ^20.7.0         |
 
-## Roadtrip
+## Roadmap
 
 - [x] Detect deprecated Components
   - [x] Detect deprecated Component properties
