@@ -40,6 +40,8 @@
     "@angular/compiler-cli": "^20.3.0",
     "@compodoc/ngd-cli": "^2.1.0",
     "@types/jasmine": "~5.1.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-angular-template-no-deprecated": "file:../..",
     "jasmine-core": "~5.9.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
