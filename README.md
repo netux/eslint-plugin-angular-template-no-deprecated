@@ -1,6 +1,6 @@
 # eslint-plugin-angular-template-no-deprecated
 
-An ESLint plugin that highlights usages of deprecated Components or Component properties inside Angular Templates. Similar to [`@typescript-eslint/no-deprecated`](https://typescript-eslint.io/rules/no-deprecated) but for Angular templates!
+An ESLint plugin that highlights usages of deprecated Components, Directives, Pipes, and their properties inside Angular Templates. Similar to [`@typescript-eslint/no-deprecated`](https://typescript-eslint.io/rules/no-deprecated) but for Angular templates!
 
 Requires [angular-eslint](https://www.npmjs.com/package/angular-eslint).
 
