@@ -13,6 +13,7 @@ interface Mapping {
 	sourceFilePaths: string[];
 	components: Map<string, AngularElementMapping>;
 	directives: Map<string, AngularElementMapping>;
+	pipes: Map<string, AngularElementMapping>;
 }
 
 interface AngularElementMapping {
@@ -66,6 +67,7 @@ function getOrLoadMappings(
 
 	const componentsMap: Mapping['components'] = new Map();
 	const directivesMap: Mapping['directives'] = new Map();
+	const pipesMap: Mapping['pipes'] = new Map();
 
 	for (const sourceFile of program.getSourceFiles()) {
 		for (const statement of sourceFile.statements) {
@@ -122,6 +124,17 @@ function getOrLoadMappings(
 					}
 					break;
 				}
+				case AngularEntityType.Pipe: {
+					const pipe = {
+						filePath: sourceFile.fileName,
+						className: statementClass.name.getText(),
+						isDeprecated: hasDeprecatedAnnotation(statementClass),
+						properties: {} // TODO(netux): parse Pipe transform args?
+					};
+
+					pipesMap.set(angularEntity.name, pipe);
+					break;
+				}
 			}
 		}
 	}
@@ -132,7 +145,8 @@ function getOrLoadMappings(
 			.getSourceFiles()
 			.map((sourceFile) => sourceFile.fileName),
 		components: componentsMap,
-		directives: directivesMap
+		directives: directivesMap,
+		pipes: pipesMap
 	};
 
 	// TODO(netux): replace old mappings that have a matching tsconfig
@@ -159,7 +173,7 @@ export function findAngularComponentInAllMappings(selector: string) {
 	}
 }
 
-export function findAngularDirectiveAllMappings(selector: string) {
+export function findAngularDirectiveInAllMappings(selector: string) {
 	for (const mapping of getMappings()) {
 		const directive = mapping.directives.get(selector);
 		if (directive == null) {
@@ -167,5 +181,16 @@ export function findAngularDirectiveAllMappings(selector: string) {
 		}
 
 		return directive;
+	}
+}
+
+export function findAngularPipeInAllMappings(name: string) {
+	for (const mapping of getMappings()) {
+		const pipe = mapping.pipes.get(name);
+		if (pipe == null) {
+			continue;
+		}
+
+		return pipe;
 	}
 }

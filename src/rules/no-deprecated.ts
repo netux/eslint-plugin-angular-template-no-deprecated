@@ -2,21 +2,29 @@ import { getTemplateParserServices } from '@angular-eslint/utils';
 import { ESLintUtils } from '@typescript-eslint/utils';
 import {
 	findAngularComponentInAllMappings,
-	findAngularDirectiveAllMappings,
+	findAngularDirectiveInAllMappings,
+	findAngularPipeInAllMappings,
 	tryEnsureMappings
 } from '../lib/mapping-store';
 import { findComponentTsFileFromTemplateFile } from '../lib/find-files';
-import type { TmplAstElement, TmplAstTemplate } from '@angular/compiler';
+import type {
+	BindingPipe as TmplAstBindingPipe,
+	TmplAstElement,
+	TmplAstTemplate
+} from '@angular/compiler';
+import { convertAstSpanToLoc } from '../util/template-parser-services';
 
 export const RULE_NAME = 'no-deprecated';
 export const MESSAGE_DEPRECATED_COMPONENT = 'deprecatedComponent';
 export const MESSAGE_DEPRECATED_DIRECTIVE = 'deprecatedDirective';
+export const MESSAGE_DEPRECATED_PIPE = 'deprecatedPipe';
 export const MESSAGE_DEPRECATED_PROPERTY = 'deprecatedProperty';
 
 export type Options = [];
 export type MessageIds =
 	| typeof MESSAGE_DEPRECATED_COMPONENT
 	| typeof MESSAGE_DEPRECATED_DIRECTIVE
+	| typeof MESSAGE_DEPRECATED_PIPE
 	| typeof MESSAGE_DEPRECATED_PROPERTY;
 
 export const rule = ESLintUtils.RuleCreator.withoutDocs<Options, MessageIds>({
@@ -32,6 +40,7 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs<Options, MessageIds>({
 				'Component {{ componentName }} is deprecated',
 			[MESSAGE_DEPRECATED_DIRECTIVE]:
 				'Directive {{ directiveName }} is deprecated',
+			[MESSAGE_DEPRECATED_PIPE]: 'Pipe {{ pipeName }} is deprecated',
 			[MESSAGE_DEPRECATED_PROPERTY]: 'Property {{ propertyName }} is deprecated'
 		}
 	},
@@ -88,10 +97,10 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs<Options, MessageIds>({
 						elementNode.type === 'Element' ? elementNode.name : 'ng-template';
 
 					const elementMapping =
-						findAngularDirectiveAllMappings(
+						findAngularDirectiveInAllMappings(
 							// Prioritize element-specific attributes
 							`${elementName} [${attributeNode.name}]`
-						) || findAngularDirectiveAllMappings(`[${attributeNode.name}]`);
+						) || findAngularDirectiveInAllMappings(`[${attributeNode.name}]`);
 
 					return {
 						elementMapping,
@@ -162,9 +171,28 @@ export const rule = ESLintUtils.RuleCreator.withoutDocs<Options, MessageIds>({
 			}
 		}
 
+		function handlePipeAst(pipeAst: TmplAstBindingPipe) {
+			const pipe = findAngularPipeInAllMappings(pipeAst.name);
+			if (pipe == null || !pipe.isDeprecated) {
+				return;
+			}
+
+			context.report({
+				loc: convertAstSpanToLoc(pipeAst, pipeAst.nameSpan) ?? {
+					line: 0,
+					column: 0
+				},
+				messageId: MESSAGE_DEPRECATED_PIPE,
+				data: {
+					pipeName: pipe.className
+				}
+			});
+		}
+
 		return {
 			Element: handleElementOrTemplateNode,
-			Template: handleElementOrTemplateNode
+			Template: handleElementOrTemplateNode,
+			BindingPipe: handlePipeAst
 		};
 	}
 });

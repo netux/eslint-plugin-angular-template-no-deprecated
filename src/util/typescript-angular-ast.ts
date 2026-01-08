@@ -2,8 +2,8 @@ import ts from 'typescript';
 
 export enum AngularEntityType {
 	Component = 'component',
-	Directive = 'directive'
-	// TODO(netux): support other types: Pipe
+	Directive = 'directive',
+	Pipe = 'pipe'
 }
 
 export interface AngularEntityExposedProperty {
@@ -13,17 +13,20 @@ export interface AngularEntityExposedProperty {
 
 export function getAngularEntity(classDeclaration: ts.ClassDeclaration):
 	| {
-			type: AngularEntityType;
+			type: AngularEntityType.Component | AngularEntityType.Directive;
 			selectors: string[];
 			exposedProperties: AngularEntityExposedProperty[];
+	  }
+	| {
+			type: AngularEntityType.Pipe;
+			name: string;
 	  }
 	| undefined {
 	const angularDecorator = findAngularDecorator(classDeclaration);
 	if (angularDecorator != null) {
 		if (
-			[AngularEntityType.Component, AngularEntityType.Directive].includes(
-				angularDecorator.type
-			)
+			angularDecorator.type === AngularEntityType.Component ||
+			angularDecorator.type === AngularEntityType.Directive
 		) {
 			const componentDecoratorArgument = (
 				angularDecorator.decoratorAst.expression as ts.CallExpression
@@ -69,6 +72,49 @@ export function getAngularEntity(classDeclaration: ts.ClassDeclaration):
 				selectors: splitAngularSelectors(selectorPropertyValue.text),
 				exposedProperties: getAngularElementExposedProperties(classDeclaration)
 			};
+		} else if (angularDecorator.type === AngularEntityType.Pipe) {
+			const componentDecoratorArgument = (
+				angularDecorator.decoratorAst.expression as ts.CallExpression
+			).arguments[0];
+			if (componentDecoratorArgument == null) {
+				return;
+			}
+
+			if (
+				componentDecoratorArgument.kind !==
+				ts.SyntaxKind.ObjectLiteralExpression
+			) {
+				// TODO(netux): support other syntax kinds. I.e. a variable containing the object being passed in
+				return;
+			}
+
+			const nameProperty = (
+				componentDecoratorArgument as ts.ObjectLiteralExpression
+			).properties.find((element): element is ts.PropertyAssignment => {
+				if (element.kind !== ts.SyntaxKind.PropertyAssignment) {
+					return false;
+				}
+
+				if (element.name?.getText() !== 'name') {
+					return false;
+				}
+
+				return true;
+			});
+			if (nameProperty == null || nameProperty.initializer == null) {
+				return;
+			}
+
+			if (nameProperty.initializer.kind !== ts.SyntaxKind.StringLiteral) {
+				return;
+			}
+
+			const namePropertyValue = nameProperty.initializer as ts.StringLiteral;
+
+			return {
+				type: angularDecorator.type,
+				name: namePropertyValue.text
+			};
 		}
 	}
 
@@ -111,6 +157,28 @@ export function getAngularEntity(classDeclaration: ts.ClassDeclaration):
 				selectors: splitAngularSelectors(selectorTypeArgumentLiteral.text),
 				exposedProperties: getAngularElementExposedProperties(classDeclaration)
 			};
+		} else if (
+			compiledAngularProperty.type === AngularEntityType.Pipe &&
+			propertyType.typeName.getText() === 'i0.ɵɵPipeDeclaration'
+		) {
+			const nameTypeArgument = propertyType.typeArguments?.[1];
+			if (
+				nameTypeArgument == null ||
+				nameTypeArgument.kind !== ts.SyntaxKind.LiteralType
+			) {
+				return;
+			}
+
+			const nameTypeArgumentLiteral = (nameTypeArgument as ts.LiteralTypeNode)
+				.literal;
+			if (nameTypeArgumentLiteral.kind !== ts.SyntaxKind.StringLiteral) {
+				return;
+			}
+
+			return {
+				type: compiledAngularProperty.type,
+				name: nameTypeArgumentLiteral.text
+			};
 		}
 	}
 }
@@ -141,7 +209,8 @@ function findAngularDecorator(classDeclaration: ts.ClassDeclaration):
 
 		const angularDecoratorType = {
 			Component: AngularEntityType.Component,
-			Directive: AngularEntityType.Directive
+			Directive: AngularEntityType.Directive,
+			Pipe: AngularEntityType.Pipe
 		}[calledDecoratorName];
 
 		if (angularDecoratorType == null) {
@@ -169,23 +238,19 @@ function findCompiledAngularProperty(classDeclaration: ts.ClassDeclaration):
 			continue;
 		}
 
-		switch (member.name?.getText()) {
-			case 'ɵcmp': {
-				return {
-					type: AngularEntityType.Component,
-					propertyAst: member as ts.PropertyDeclaration
-				};
-			}
-			case 'ɵdir': {
-				return {
-					type: AngularEntityType.Directive,
-					propertyAst: member as ts.PropertyDeclaration
-				};
-			}
-			default: {
-				continue;
-			}
+		const angularEntityType = {
+			ɵcmp: AngularEntityType.Component,
+			ɵdir: AngularEntityType.Directive,
+			ɵpipe: AngularEntityType.Pipe
+		}[member.name?.getText() ?? ''];
+		if (angularEntityType == null) {
+			continue;
 		}
+
+		return {
+			type: angularEntityType,
+			propertyAst: member as ts.PropertyDeclaration
+		};
 	}
 }
 

@@ -7,6 +7,7 @@ import type {
 import {
 	MESSAGE_DEPRECATED_COMPONENT,
 	MESSAGE_DEPRECATED_DIRECTIVE,
+	MESSAGE_DEPRECATED_PIPE,
 	MESSAGE_DEPRECATED_PROPERTY,
 	type MessageIds,
 	type Options
@@ -145,7 +146,7 @@ export const invalid: readonly InvalidTestCase<MessageIds, Options>[] = [
 		]
 	},
 	{
-		name: 'Finds usage of a deprecated directives declared in an external library',
+		name: 'Finds usage of a deprecated directive declared in an external library',
 		...fromFSTemplateCase('uses-deprecated-directive-from-lib'),
 		errors: [
 			{
@@ -210,6 +211,44 @@ export const invalid: readonly InvalidTestCase<MessageIds, Options>[] = [
 				messageId: MESSAGE_DEPRECATED_PROPERTY,
 				data: {
 					propertyName: 'LibHasDeprecatedInputsDirective.deprecatedInput'
+				}
+			}
+		]
+	},
+	{
+		name: 'Finds usage of a deprecated pipe declared in the same Angular application',
+		...fromFSTemplateCase('uses-deprecated-pipe-from-self'),
+		errors: [
+			{
+				messageId: MESSAGE_DEPRECATED_PIPE,
+				data: {
+					pipeName: 'IsDeprecatedPipe'
+				}
+			}
+		]
+	},
+	{
+		name: 'Finds usage of a deprecated pipes declared in an external library',
+		...fromFSTemplateCase('uses-deprecated-pipe-from-lib'),
+		errors: [
+			{
+				messageId: MESSAGE_DEPRECATED_PIPE,
+				data: {
+					pipeName: 'LibIsDeprecatedPipe'
+				}
+			}
+		]
+	},
+	{
+		name: 'Finds usage of a deprecated pipe inside an inline template, declared in the same Angular application',
+		...fromFSTemplateCase('uses-deprecated-pipe-in-inline-template', {
+			ext: '.ts'
+		}),
+		errors: [
+			{
+				messageId: MESSAGE_DEPRECATED_PIPE,
+				data: {
+					pipeName: 'IsDeprecatedPipe'
 				}
 			}
 		]

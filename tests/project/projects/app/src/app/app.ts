@@ -11,6 +11,9 @@ import { CaseUsesDeprecatedDirectiveInInlineTemplateComponent } from '../cases/u
 import { CaseUsesDeprecatedDirectiveFromAngularCommonsComponent } from '../cases/uses-deprecated-directive-from-angular-commons/uses-deprecated-directive-from-angular-commons.component';
 import { CaseUsesDeprecatedInputsFromSelfDirectiveComponent } from '../cases/uses-deprecated-inputs-from-self-directive/uses-deprecated-inputs-from-self-directive.component';
 import { CaseUsesDeprecatedInputsFromLibDirectiveComponent } from '../cases/uses-deprecated-inputs-from-lib-directive/uses-deprecated-inputs-from-lib-directive.component';
+import { CaseUsesDeprecatedPipeFromSelfComponent } from '../cases/uses-deprecated-pipe-from-self/uses-deprecated-pipe-from-self.component';
+import { CaseUsesDeprecatedPipeFromLibComponent } from '../cases/uses-deprecated-pipe-from-lib/uses-deprecated-pipe-from-lib.component';
+import { CaseUsesDeprecatedPipeInInlineTemplateComponent } from '../cases/uses-deprecated-pipe-in-inline-template/uses-deprecated-pipe-in-inline-template.component';
 
 @Component({
   selector: 'app-root',
@@ -21,12 +24,15 @@ import { CaseUsesDeprecatedInputsFromLibDirectiveComponent } from '../cases/uses
     CaseUsesDeprecatedComponentInInlineTemplateComponent,
     CaseUsesDeprecatedInputsFromSelfComponentComponent,
     CaseUsesDeprecatedInputsFromLibComponentComponent,
-    CaseUsesDeprecatedDirectiveInInlineTemplateComponent,
     CaseUsesDeprecatedDirectiveFromSelfComponent,
     CaseUsesDeprecatedDirectiveFromLibComponent,
+    CaseUsesDeprecatedDirectiveInInlineTemplateComponent,
     CaseUsesDeprecatedDirectiveFromAngularCommonsComponent,
     CaseUsesDeprecatedInputsFromSelfDirectiveComponent,
     CaseUsesDeprecatedInputsFromLibDirectiveComponent,
+    CaseUsesDeprecatedPipeFromSelfComponent,
+    CaseUsesDeprecatedPipeFromLibComponent,
+    CaseUsesDeprecatedPipeInInlineTemplateComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.css',
